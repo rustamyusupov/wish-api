@@ -1,0 +1,310 @@
+{
+	"openapi": "3.0.3",
+	"info": {
+		"title": "wish-api",
+		"version": "0.1.0"
+	},
+	"components": {
+		"schemas": {}
+	},
+	"paths": {
+		"/health": {
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Default Response"
+					}
+				}
+			}
+		},
+		"/categories": {
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer",
+												"minimum": -9007199254740991,
+												"maximum": 9007199254740991
+											},
+											"name": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"id",
+											"name"
+										],
+										"additionalProperties": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/currencies": {
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer",
+												"minimum": -9007199254740991,
+												"maximum": 9007199254740991
+											},
+											"code": {
+												"type": "string"
+											},
+											"symbol": {
+												"type": "string"
+											}
+										},
+										"required": [
+											"id",
+											"code",
+											"symbol"
+										],
+										"additionalProperties": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wishes": {
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "array",
+									"items": {
+										"type": "object",
+										"properties": {
+											"id": {
+												"type": "integer",
+												"minimum": -9007199254740991,
+												"maximum": 9007199254740991
+											},
+											"name": {
+												"type": "string"
+											},
+											"link": {
+												"type": "string"
+											},
+											"categoryId": {
+												"type": "integer",
+												"minimum": -9007199254740991,
+												"maximum": 9007199254740991
+											},
+											"category": {
+												"type": "string"
+											},
+											"sort": {
+												"type": "integer",
+												"minimum": -9007199254740991,
+												"maximum": 9007199254740991
+											},
+											"amount": {
+												"nullable": true,
+												"type": "number"
+											},
+											"symbol": {
+												"nullable": true,
+												"type": "string"
+											},
+											"change": {
+												"nullable": true,
+												"type": "object",
+												"properties": {
+													"direction": {
+														"type": "string",
+														"enum": [
+															"up",
+															"down"
+														]
+													},
+													"percent": {
+														"type": "number"
+													},
+													"low": {
+														"type": "boolean"
+													}
+												},
+												"required": [
+													"direction",
+													"percent",
+													"low"
+												],
+												"additionalProperties": false
+											}
+										},
+										"required": [
+											"id",
+											"name",
+											"link",
+											"categoryId",
+											"category",
+											"sort",
+											"amount",
+											"symbol",
+											"change"
+										],
+										"additionalProperties": false
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wishes/{id}": {
+			"get": {
+				"parameters": [
+					{
+						"schema": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": true,
+							"maximum": 9007199254740991
+						},
+						"in": "path",
+						"name": "id",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										},
+										"name": {
+											"type": "string"
+										},
+										"link": {
+											"type": "string"
+										},
+										"categoryId": {
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										},
+										"sort": {
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										},
+										"createdAt": {
+											"type": "string",
+											"format": "date-time",
+											"pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+										},
+										"amount": {
+											"nullable": true,
+											"type": "number"
+										},
+										"currencyId": {
+											"nullable": true,
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										},
+										"history": {
+											"type": "array",
+											"items": {
+												"type": "object",
+												"properties": {
+													"amount": {
+														"type": "number"
+													},
+													"code": {
+														"type": "string"
+													},
+													"symbol": {
+														"type": "string"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time",
+														"pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+													}
+												},
+												"required": [
+													"amount",
+													"code",
+													"symbol",
+													"createdAt"
+												],
+												"additionalProperties": false
+											}
+										}
+									},
+									"required": [
+										"id",
+										"name",
+										"link",
+										"categoryId",
+										"sort",
+										"createdAt",
+										"amount",
+										"currencyId",
+										"history"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

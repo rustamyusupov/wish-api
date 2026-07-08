@@ -1,2 +1,3 @@
 package-lock.json
 src/db/migrations
+openapi.json

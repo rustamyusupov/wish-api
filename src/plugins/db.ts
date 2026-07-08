@@ -5,9 +5,11 @@ import { migrate } from 'drizzle-orm/better-sqlite3/migrator';
 import fp from 'fastify-plugin';
 import * as schema from '../db/schema.ts';
 
+export type Db = ReturnType<typeof createDb>;
+
 declare module 'fastify' {
 	interface FastifyInstance {
-		db: ReturnType<typeof createDb>;
+		db: Db;
 	}
 }
 
