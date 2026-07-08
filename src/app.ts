@@ -6,6 +6,10 @@ export const buildApp = async () => {
 	const app = fastify({ logger: true });
 
 	await app.register(autoload, {
+		dir: path.join(import.meta.dirname, 'plugins')
+	});
+
+	await app.register(autoload, {
 		dir: path.join(import.meta.dirname, 'routes')
 	});
 
