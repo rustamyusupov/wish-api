@@ -17,6 +17,119 @@
 				}
 			}
 		},
+		"/auth/register": {
+			"post": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"token": {
+										"type": "string"
+									},
+									"response": {
+										"type": "object",
+										"properties": {},
+										"additionalProperties": {}
+									}
+								},
+								"additionalProperties": {}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Default Response"
+					}
+				}
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"id": {
+										"type": "string"
+									},
+									"response": {}
+								},
+								"additionalProperties": {}
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Default Response"
+					}
+				}
+			}
+		},
+		"/auth/logout": {
+			"post": {
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"ok": {
+											"type": "boolean",
+											"enum": [
+												true
+											]
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/session": {
+			"get": {
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"authenticated": {
+											"type": "boolean"
+										},
+										"needsSetup": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"authenticated",
+										"needsSetup"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
 		"/categories": {
 			"get": {
 				"responses": {
