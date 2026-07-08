@@ -290,6 +290,93 @@
 						}
 					}
 				}
+			},
+			"post": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"link": {
+										"type": "string",
+										"minLength": 1
+									},
+									"categoryId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									},
+									"amount": {
+										"type": "number",
+										"minimum": 0
+									},
+									"currencyId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									}
+								},
+								"required": [
+									"name",
+									"link",
+									"categoryId",
+									"amount",
+									"currencyId"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"201": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"id": {
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										}
+									},
+									"required": [
+										"id"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/wishes/{id}": {
@@ -391,6 +478,368 @@
 										"amount",
 										"currencyId",
 										"history"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"put": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"name": {
+										"type": "string",
+										"minLength": 1
+									},
+									"link": {
+										"type": "string",
+										"minLength": 1
+									},
+									"categoryId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									},
+									"amount": {
+										"type": "number",
+										"minimum": 0
+									},
+									"currencyId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									}
+								},
+								"required": [
+									"name",
+									"link",
+									"categoryId",
+									"amount",
+									"currencyId"
+								]
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"schema": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": true,
+							"maximum": 9007199254740991
+						},
+						"in": "path",
+						"name": "id",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"ok": {
+											"type": "boolean",
+											"enum": [
+												true
+											]
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"parameters": [
+					{
+						"schema": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": true,
+							"maximum": 9007199254740991
+						},
+						"in": "path",
+						"name": "id",
+						"required": true
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"ok": {
+											"type": "boolean",
+											"enum": [
+												true
+											]
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wishes/order": {
+			"put": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"categoryId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									},
+									"ids": {
+										"minItems": 1,
+										"type": "array",
+										"items": {
+											"type": "integer",
+											"minimum": 0,
+											"exclusiveMinimum": true,
+											"maximum": 9007199254740991
+										}
+									}
+								},
+								"required": [
+									"categoryId",
+									"ids"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"ok": {
+											"type": "boolean",
+											"enum": [
+												true
+											]
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wishes/{id}/prices": {
+			"post": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"amount": {
+										"type": "number",
+										"minimum": 0
+									},
+									"currencyId": {
+										"type": "integer",
+										"minimum": 0,
+										"exclusiveMinimum": true,
+										"maximum": 9007199254740991
+									}
+								},
+								"required": [
+									"amount",
+									"currencyId"
+								]
+							}
+						}
+					}
+				},
+				"parameters": [
+					{
+						"schema": {
+							"type": "integer",
+							"minimum": 0,
+							"exclusiveMinimum": true,
+							"maximum": 9007199254740991
+						},
+						"in": "path",
+						"name": "id",
+						"required": true
+					}
+				],
+				"responses": {
+					"201": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"ok": {
+											"type": "boolean",
+											"enum": [
+												true
+											]
+										}
+									},
+									"required": [
+										"ok"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
 									],
 									"additionalProperties": false
 								}

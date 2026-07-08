@@ -44,3 +44,29 @@ export const wishDetail = z.object({
 export const notFound = z.object({
 	message: z.string()
 });
+
+export const wishInput = z.object({
+	name: z.string().trim().min(1),
+	link: z.string().trim().min(1),
+	categoryId: z.number().int().positive(),
+	amount: z.number().nonnegative(),
+	currencyId: z.number().int().positive()
+});
+
+export const orderInput = z.object({
+	categoryId: z.number().int().positive(),
+	ids: z.array(z.number().int().positive()).min(1)
+});
+
+export const priceInput = z.object({
+	amount: z.number().nonnegative(),
+	currencyId: z.number().int().positive()
+});
+
+export const created = z.object({
+	id: z.number().int()
+});
+
+export const okResponse = z.object({
+	ok: z.literal(true)
+});
