@@ -23,7 +23,7 @@ import { loginBody, okResponse, registerBody, sessionInfo } from './schemas.ts';
 
 const setChallenge = (reply: FastifyReply, challenge: string, config: AuthConfig) => {
 	reply.setCookie(CHALLENGE_COOKIE, challenge, {
-		path: '/auth',
+		path: '/',
 		maxAge: CHALLENGE_MAX_AGE,
 		httpOnly: true,
 		sameSite: 'lax',
@@ -32,7 +32,7 @@ const setChallenge = (reply: FastifyReply, challenge: string, config: AuthConfig
 };
 
 const startSession = (reply: FastifyReply, config: AuthConfig) => {
-	reply.clearCookie(CHALLENGE_COOKIE, { path: '/auth' });
+	reply.clearCookie(CHALLENGE_COOKIE, { path: '/' });
 	reply.setCookie(SESSION_COOKIE, createSessionToken(config.secret), {
 		path: '/',
 		maxAge: SESSION_MAX_AGE,
