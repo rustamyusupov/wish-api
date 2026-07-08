@@ -16,6 +16,7 @@ export const jobStatus = z.object({
 			finishedAt: z.iso.datetime(),
 			total: z.number().int(),
 			saved: z.number().int(),
+			unchanged: z.number().int(),
 			unavailable: z.number().int(),
 			failed: z.number().int()
 		})

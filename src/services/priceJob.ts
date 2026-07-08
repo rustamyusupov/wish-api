@@ -1,5 +1,5 @@
 import { setTimeout as sleep } from 'node:timers/promises';
-import { asc } from 'drizzle-orm';
+import { asc, desc, eq } from 'drizzle-orm';
 import type { FastifyBaseLogger } from 'fastify';
 import { z } from 'zod';
 import { currencies, prices, wishes } from '../db/schema.ts';
@@ -20,6 +20,7 @@ const parseResult = z.looseObject({
 export type JobStats = {
 	total: number;
 	saved: number;
+	unchanged: number;
 	unavailable: number;
 	failed: number;
 };
@@ -69,7 +70,13 @@ export const runPriceJob = async (
 			.map((currency) => [currency.code, currency.id])
 	);
 
-	const stats: JobStats = { total: rows.length, saved: 0, unavailable: 0, failed: 0 };
+	const stats: JobStats = {
+		total: rows.length,
+		saved: 0,
+		unchanged: 0,
+		unavailable: 0,
+		failed: 0
+	};
 	log.info(`price job started: ${stats.total} wishes`);
 
 	for (const [index, wish] of rows.entries()) {
@@ -86,9 +93,25 @@ export const runPriceJob = async (
 				const currencyId = currencyIds.get(result.currencyCode);
 				if (!currencyId) throw new Error(`unknown currency: ${result.currencyCode}`);
 
-				db.insert(prices).values({ wishId: wish.id, amount: result.amount, currencyId }).run();
-				stats.saved += 1;
-				log.info(`[${wish.id}] ${wish.name}: ${result.amount} ${result.currencyCode}`);
+				const last = db
+					.select({ amount: prices.amount, currencyId: prices.currencyId })
+					.from(prices)
+					.where(eq(prices.wishId, wish.id))
+					.orderBy(desc(prices.createdAt), desc(prices.id))
+					.limit(1)
+					.get();
+
+				const currentAmount = last ? Math.round(last.amount * 100) / 100 : undefined;
+				if (currentAmount === result.amount && last?.currencyId === currencyId) {
+					stats.unchanged += 1;
+					log.info(
+						`[${wish.id}] ${wish.name}: unchanged (${result.amount} ${result.currencyCode})`
+					);
+				} else {
+					db.insert(prices).values({ wishId: wish.id, amount: result.amount, currencyId }).run();
+					stats.saved += 1;
+					log.info(`[${wish.id}] ${wish.name}: ${result.amount} ${result.currencyCode}`);
+				}
 			}
 		} catch (error) {
 			stats.failed += 1;
@@ -99,7 +122,7 @@ export const runPriceJob = async (
 	}
 
 	log.info(
-		`price job finished: ${stats.saved} saved, ${stats.unavailable} unavailable, ${stats.failed} failed`
+		`price job finished: ${stats.saved} saved, ${stats.unchanged} unchanged, ${stats.unavailable} unavailable, ${stats.failed} failed`
 	);
 	return stats;
 };
