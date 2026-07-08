@@ -12,7 +12,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.post(
 		'/prices',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: { response: { 202: accepted, 409: jobError, 503: jobError } }
 		},
 		(request, reply) => {
@@ -44,7 +44,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 
 	app.get(
 		'/prices',
-		{ preHandler: app.authenticate, schema: { response: { 200: jobStatus } } },
+		{ onRequest: app.authenticate, schema: { response: { 200: jobStatus } } },
 		() => ({ running, lastRun })
 	);
 };

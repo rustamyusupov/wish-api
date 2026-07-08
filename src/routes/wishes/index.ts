@@ -44,7 +44,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.post(
 		'',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: { body: wishInput, response: { 201: created, 400: z.object(badRequest) } }
 		},
 		(request, reply) => {
@@ -65,7 +65,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.put(
 		'/order',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: { body: orderInput, response: { 200: okResponse, 400: z.object(badRequest) } }
 		},
 		(request, reply) => {
@@ -82,7 +82,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.put(
 		'/:id',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: {
 				params: wishParams,
 				body: wishInput,
@@ -110,7 +110,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.delete(
 		'/:id',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: { params: wishParams, response: { 200: okResponse, 404: notFound } }
 		},
 		(request, reply) => {
@@ -125,7 +125,7 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 	app.post(
 		'/:id/prices',
 		{
-			preHandler: app.authenticate,
+			onRequest: app.authenticate,
 			schema: {
 				params: wishParams,
 				body: priceInput,
