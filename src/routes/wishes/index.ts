@@ -8,6 +8,7 @@ import {
 	deleteWish,
 	getWishDetail,
 	listWishes,
+	previewWish,
 	reorderWishes,
 	updateWish
 } from '../../services/wishes.ts';
@@ -16,11 +17,13 @@ import {
 	notFound,
 	okResponse,
 	orderInput,
+	previewInput,
 	priceInput,
 	wishDetail,
 	wishInput,
 	wishListItem,
-	wishParams
+	wishParams,
+	wishPreview
 } from './schemas.ts';
 
 const badRequest = { message: z.string() };
@@ -38,6 +41,41 @@ const routes: FastifyPluginAsyncZod = async (app) => {
 				return { message: 'Wish not found' };
 			}
 			return wish;
+		}
+	);
+
+	app.post(
+		'/preview',
+		{
+			onRequest: app.authenticate,
+			schema: {
+				body: previewInput,
+				response: {
+					200: wishPreview,
+					422: z.object(badRequest),
+					502: z.object(badRequest),
+					503: z.object(badRequest)
+				}
+			}
+		},
+		async (request, reply) => {
+			const parserUrl = process.env.PARSER_URL;
+			if (!parserUrl) {
+				reply.code(503);
+				return { message: 'PARSER_URL is not set' };
+			}
+
+			try {
+				const result = await previewWish(app.db, parserUrl, request.body.url);
+				if (!result.ok) {
+					reply.code(422);
+					return { message: result.message };
+				}
+				return result.preview;
+			} catch (error) {
+				reply.code(502);
+				return { message: error instanceof Error ? error.message : String(error) };
+			}
 		}
 	);
 

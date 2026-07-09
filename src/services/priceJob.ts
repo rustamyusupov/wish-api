@@ -1,21 +1,14 @@
 import { setTimeout as sleep } from 'node:timers/promises';
 import { asc, desc, eq } from 'drizzle-orm';
 import type { FastifyBaseLogger } from 'fastify';
-import { z } from 'zod';
 import { currencies, prices, wishes } from '../db/schema.ts';
 import type { Db } from '../plugins/db.ts';
+import { parseLink } from './parser.ts';
 
 const RETRY_ATTEMPTS = 3;
 const RETRY_BACKOFF_MS = Number(process.env.JOB_RETRY_BACKOFF_MS ?? 15_000);
 const PAUSE_MS = Number(process.env.JOB_PAUSE_MS ?? 10_000);
 const PAUSE_AVITO_MS = Number(process.env.JOB_PAUSE_AVITO_MS ?? 45_000);
-const PARSE_TIMEOUT_MS = 90_000;
-
-const parseResult = z.looseObject({
-	available: z.boolean(),
-	amount: z.number().optional(),
-	currencyCode: z.string().optional()
-});
 
 export type JobStats = {
 	total: number;
@@ -23,18 +16,6 @@ export type JobStats = {
 	unchanged: number;
 	unavailable: number;
 	failed: number;
-};
-
-const parseLink = async (parserUrl: string, link: string) => {
-	const response = await fetch(`${parserUrl}/parse`, {
-		method: 'POST',
-		headers: { 'content-type': 'application/json' },
-		body: JSON.stringify({ url: link }),
-		signal: AbortSignal.timeout(PARSE_TIMEOUT_MS)
-	});
-	if (!response.ok) throw new Error(`parser responded ${response.status}`);
-
-	return parseResult.parse(await response.json());
 };
 
 const withRetry = async <T>(fn: () => Promise<T>): Promise<T> => {

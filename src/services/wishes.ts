@@ -1,6 +1,7 @@
 import { asc, desc, eq, sql } from 'drizzle-orm';
 import { categories, currencies, prices, wishes } from '../db/schema.ts';
 import type { Db } from '../plugins/db.ts';
+import { ParserError, parseLink } from './parser.ts';
 import { priceChange } from './prices.ts';
 
 export type WishInput = {
@@ -10,6 +11,17 @@ export type WishInput = {
 	amount: number;
 	currencyId: number;
 };
+
+export type WishPreview = {
+	name: string | null;
+	link: string;
+	amount: number;
+	currencyId: number;
+	currencyCode: string;
+	symbol: string;
+};
+
+export type PreviewResult = { ok: true; preview: WishPreview } | { ok: false; message: string };
 
 export const listWishes = (db: Db) => {
 	const rows = db
@@ -107,6 +119,47 @@ export const categoryExists = (db: Db, id: number) =>
 export const currencyExists = (db: Db, id: number) =>
 	db.select({ id: currencies.id }).from(currencies).where(eq(currencies.id, id)).get() !==
 	undefined;
+
+const getCurrencyByCode = (db: Db, code: string) =>
+	db
+		.select({ id: currencies.id, symbol: currencies.symbol })
+		.from(currencies)
+		.where(eq(currencies.code, code))
+		.get();
+
+export const previewWish = async (
+	db: Db,
+	parserUrl: string,
+	url: string
+): Promise<PreviewResult> => {
+	let result;
+	try {
+		result = await parseLink(parserUrl, url);
+	} catch (error) {
+		if (error instanceof ParserError && error.status === 422)
+			return { ok: false, message: 'Shop is not supported' };
+		throw error;
+	}
+
+	if (!result.available) return { ok: false, message: 'Item is unavailable' };
+	if (result.amount === undefined || result.currencyCode === undefined)
+		return { ok: false, message: 'Parser returned no price' };
+
+	const currency = getCurrencyByCode(db, result.currencyCode);
+	if (!currency) return { ok: false, message: `Unknown currency: ${result.currencyCode}` };
+
+	return {
+		ok: true,
+		preview: {
+			name: result.name ?? null,
+			link: url,
+			amount: result.amount,
+			currencyId: currency.id,
+			currencyCode: result.currencyCode,
+			symbol: currency.symbol
+		}
+	};
+};
 
 export const createWish = (db: Db, input: WishInput) =>
 	db.transaction((tx) => {

@@ -303,6 +303,11 @@
 													"minimum": -9007199254740991,
 													"maximum": 9007199254740991
 												},
+												"unchanged": {
+													"type": "integer",
+													"minimum": -9007199254740991,
+													"maximum": 9007199254740991
+												},
 												"unavailable": {
 													"type": "integer",
 													"minimum": -9007199254740991,
@@ -319,6 +324,7 @@
 												"finishedAt",
 												"total",
 												"saved",
+												"unchanged",
 												"unavailable",
 												"failed"
 											],
@@ -798,6 +804,130 @@
 						}
 					},
 					"404": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/wishes/preview": {
+			"post": {
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": {
+									"url": {
+										"type": "string",
+										"format": "uri"
+									}
+								},
+								"required": [
+									"url"
+								]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"name": {
+											"nullable": true,
+											"type": "string"
+										},
+										"link": {
+											"type": "string"
+										},
+										"amount": {
+											"type": "number"
+										},
+										"currencyId": {
+											"type": "integer",
+											"minimum": -9007199254740991,
+											"maximum": 9007199254740991
+										},
+										"currencyCode": {
+											"type": "string"
+										},
+										"symbol": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"name",
+										"link",
+										"amount",
+										"currencyId",
+										"currencyCode",
+										"symbol"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"422": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"502": {
+						"description": "Default Response",
+						"content": {
+							"application/json": {
+								"schema": {
+									"type": "object",
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"additionalProperties": false
+								}
+							}
+						}
+					},
+					"503": {
 						"description": "Default Response",
 						"content": {
 							"application/json": {

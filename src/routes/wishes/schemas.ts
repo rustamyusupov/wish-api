@@ -45,6 +45,19 @@ export const notFound = z.object({
 	message: z.string()
 });
 
+export const previewInput = z.object({
+	url: z.url()
+});
+
+export const wishPreview = z.object({
+	name: z.string().nullable(),
+	link: z.string(),
+	amount: z.number(),
+	currencyId: z.number().int(),
+	currencyCode: z.string(),
+	symbol: z.string()
+});
+
 export const wishInput = z.object({
 	name: z.string().trim().min(1),
 	link: z.string().trim().min(1),
